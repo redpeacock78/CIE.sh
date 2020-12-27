@@ -10,7 +10,7 @@
 
         echo "Lab pairs: ${lab_pairs[i]}"
         echo "Output: ${output}"
-        echo "dE2000: ${dE1976[i]}"
+        echo "dE1976: ${dE1976[i]}"
 
         [[ "${result}" == 1 ]]
     done
