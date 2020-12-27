@@ -259,19 +259,19 @@ function dE00() {
         if [[ $(calc "${c1} == 0") == 1 ]] || [[ $(calc "${c2} == 0") == 1 ]]; then
             declare delta_hp1="0"
         elif [[ $(calc "${abs} <= 180") == 1 ]]; then
-            declare delta_hp1=$(calc "(${hp2} - ${hp1})")
+            declare delta_hp1=$(calc "${hp2} - ${hp1}")
         elif [[ $(calc "${hp2} <= ${hp1}") == 1 ]]; then
-            declare delta_hp1=$(calc "(${hp2} - ${hp1} + 360)")
+            declare delta_hp1=$(calc "${hp2} - ${hp1} + 360")
         else
-            declare delta_hp1=$(calc "(${hp2} - ${hp1} - 360)")
+            declare delta_hp1=$(calc "${hp2} - ${hp1} - 360")
         fi
 
-        declare delta_hp=$(calc "(2 * sqrt(${cp1} * ${cp2}) * s($(degree2radian ${delta_hp1}) / 2))")
+        declare delta_hp=$(calc "2 * sqrt(${cp1} * ${cp2}) * s($(degree2radian ${delta_hp1}) / 2)")
 
         if [[ $(calc "${abs} > 180") == 1 ]]; then
-            declare hp_=$(calc "((${hp1} + ${hp2} + 360)/2)")
+            declare hp_=$(calc "(${hp1} + ${hp2} + 360) / 2")
         else
-            declare hp_=$(calc "((${hp1} + ${hp2})/2)")
+            declare hp_=$(calc "(${hp1} + ${hp2}) / 2")
         fi
 
         declare t_a=$(
