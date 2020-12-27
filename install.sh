@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-resolve_link() {
+function resolve_link() {
     $(type -p greadlink readlink | head -1) "${1}"
 }
 
-abs_dirname() {
+function abs_dirname() {
     declare cwd="$(pwd)"
     declare path="${1}"
 
@@ -19,7 +19,7 @@ abs_dirname() {
     cd "${cwd}"
 }
 
-declare PREFIX="$1"
+declare PREFIX="${1}"
 if [[ -z "${1}" ]]; then
     {
         echo "usage: ${0} <prefix>"
