@@ -9,9 +9,11 @@ shopt -s nullglob
 
 declare old_lab=$(find "${stow}" -type d -name lab-\*)
 
-for package in "${old_lab[@]}"; do
-    stow --dir="${stow}" --delete $(basename "${package}")
-done
+if [[ "${old_lab}" != "" ]]; then
+    for package in "${old_lab[@]}"; do
+        stow --dir="${stow}" --delete $(basename "${package}")
+    done
+fi
 
 ./install.sh "${stow}/${version}"
 stow --dir="${stow}" --restow "${version}"
