@@ -51,7 +51,7 @@ by LAB Delta E (CIE76, CIE94, CIEDE2000).
 
 Option:
   -dE76            Use the CIE 1976 color difference formula.
-  -dE84 [-g, -t]   Use the CIE 1994 color difference formula.
+  -dE94 [-g, -t]   Use the CIE 1994 color difference formula.
                    (-g: kl=1,k1=0.045,k2=0.015 / -t: kl=2,k1=0.048,k2=0,014)
   -dE00            Use the CIEDE2000 color difference formula.
   -v, --version    Show version and info.
@@ -70,7 +70,7 @@ function error() {
     {
         cat <<ERR 1>&2
 ${0##*/}: Sorry. An error has occurred :_(
-Refer 'lab -h' or 'lab --help' for how to use the command.
+Refer '${0##*/} -h' or '${0##*/} --help' for how to use the command.
 ERR
         exit 1
     }
@@ -119,7 +119,9 @@ function dE94() {
             declare kl="2"
             declare k1="0.048"
             declare k2="0.014"
-        elif [[ "${k}" != "-g" ]] || [[ "${k}" != "-t" ]]; then
+        elif [[ -z "${k}" ]] ||
+            [[ "${k}" != "-g" ]] ||
+            [[ "${k}" != "-t" ]]; then
             error
         fi
 
@@ -362,11 +364,15 @@ elif [[ ${@:1:1} == "-v" ]] ||
     [[ ${@:1:1} == "--version" ]]; then
     version
 elif [[ ${@:1:1} == "-h" ]] ||
-    [[ ${@:1:1} == "--help" ]] ||
+    [[ ${@:1:1} == "--help" ]]; then
+    usage
+elif [[ -z ${@:1:1} ]] ||
+    [[ ${@:1:1} != "-h" ]] ||
+    [[ ${@:1:1} != "--help" ]]
     [[ ${@:1:1} != "-v" ]] ||
     [[ ${@:1:1} != "--version" ]] ||
     [[ ${@:1:1} != "-dE76" ]] ||
     [[ ${@:1:1} != "-dE94" ]] ||
     [[ ${@:1:1} != "-dE00" ]]; then
-    usage
+    error
 fi
