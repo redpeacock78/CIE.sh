@@ -58,7 +58,7 @@
         '0.6377' '0.9082'
     )
 
-    for ((i=0; i<"${#lab_pairs[@]}"; i++)); do
+    for (( i=0; i < "${#lab_pairs[@]}"; i++ )); do
         declare output="$(./bin/lab -dE00 ${lab_pairs[i]})"
         declare result="$(bc -l <<<"${output} == ${dE2000[i]}")"
         
@@ -66,6 +66,6 @@
         echo "Output: ${output}"
         echo "dE2000: ${dE2000[i]}"
 
-        [ "${result}" -eq 1 ]
+        [[ "${result}" == 1 ]]
     done
 }
