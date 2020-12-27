@@ -1,0 +1,21 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+      - name: Setup
+        run: |
+          add-apt-repository ppa:duggan/bats
+          apt-get update
+          apt-get install bats
+      - name: Run Test
+        run: |
+          bats test/*
