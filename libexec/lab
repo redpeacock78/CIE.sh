@@ -99,7 +99,7 @@ function dE76() {
         declare aab=$(calc "(${ab/a*=/} - ${aa/a*=/}) ^ 2")
         declare bab=$(calc "(${bb/b*=/} - ${ba/b*=/}) ^ 2")
 
-        calc "sqrt(${Lab} + ${aab} + ${bab})"
+        calc "sqrt(${Lab} + ${aab} + ${bab})" | awk '{printf("%.4f\n",$1)}'
     }
 }
 function dE94() {
@@ -154,7 +154,7 @@ function dE94() {
         declare b=$(calc "((${delta_cab}/(${kc} * ${sc})) ^ 2)")
         declare c=$(calc "((${delta_hab}/(${kh} * ${sh})) ^ 2)")
 
-        calc "sqrt(${a} + ${b} + ${c})"
+        calc "sqrt(${a} + ${b} + ${c})" | awk '{printf("%.4f\n",$1)}'
     }
 }
 function dE00() {
@@ -347,26 +347,24 @@ function dE00() {
                 ((${delta_cp}/(${kc} * ${sc})) ^ 2) + \
                 ((${delta_hp}/(${kh} * ${sh})) ^ 2) + \
                 ${rt} * (${delta_cp}/(${kc} * ${sc})) * (${delta_hp}/(${kh} * ${sh})) \
-            )"
+            )" |
+            awk '{printf("%.4f\n",$1)}'
     }
 }
 
 if [[ ${@:1:1} == "-dE76" ]]; then
-    shift &&
-        dE76 ${@} | awk '{printf("%.4f\n",$1)}'
+    shift && dE76 ${@}
 elif [[ ${@:1:1} == "-dE94" ]]; then
-    shift &&
-        dE94 ${@} | awk '{printf("%.4f\n",$1)}'
+    shift && dE94 ${@}
 elif [[ ${@:1:1} == "-dE00" ]]; then
-    shift &&
-        dE00 ${@} | awk '{printf("%.4f\n",$1)}'
+    shift && dE00 ${@}
 elif [[ ${@:1:1} == "-v" ]] ||
     [[ ${@:1:1} == "--version" ]]; then
     version
 elif [[ ${@:1:1} == "-h" ]] ||
     [[ ${@:1:1} == "--help" ]]; then
     usage
-elif [[ -z ${@:1:1} ]] ||
+elif [[ -z ${@} ]] ||
     [[ ${@:1:1} != "-h" ]] ||
     [[ ${@:1:1} != "--help" ]]
     [[ ${@:1:1} != "-v" ]] ||
