@@ -15,13 +15,13 @@ jobs:
         run: |
           sudo add-apt-repository ppa:duggan/bats
           sudo apt-get update
-          sudo apt-get install bats stow
+          sudo apt-get install bats
       - name: Run Test
         run: |
           bats test/*
-      - name: install CIE.sh with stow
+      - name: install CIE.sh
         run:
-          ./install_with_stow.sh
+          ./install.sh ${PREFIX:-/usr/local}
       - name: Show version
         run: |
           lab --version
