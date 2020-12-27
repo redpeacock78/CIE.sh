@@ -21,7 +21,7 @@ jobs:
           bats test/*
       - name: install CIE.sh
         run:
-          ./install.sh ${PREFIX:-/usr/local}
+          sudo ./install.sh ${PREFIX:-/usr/local}
       - name: Show version
         run: |
           lab --version
