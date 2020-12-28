@@ -1,0 +1,202 @@
+#!/usr/bin/env bash
+
+declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
+source "${abs_path%/*}/libexec/lab-exec-calc"
+source "${abs_path%/*}/libexec/lab-error"
+
+function dE00() {
+    #Reference: https://ja.wikipedia.org/wiki/%E8%89%B2%E5%B7%AE#CIEDE2000_(delta_E00)
+    {
+        [[ "${#@}" != 6 ]] && error
+
+        function abs() {
+            {
+                awk '{OFMT="%.100f"}{print abs($1)} function abs(x){return (x < 0)?-x:x}' <<<"${@}"
+            }
+        }
+        function exp() {
+            {
+                awk '{OFMT="%.100f"}{print exp($1)}' <<<"${@}"
+            }
+        }
+        function atan2() {
+            {
+                awk '{OFMT="%.100f"}{print atan2($1, $2)}' <<<"${@}"
+            }
+        }
+        function radian2degree() {
+            {
+                calc "${@} * (180 / ${pi})"
+            }
+        }
+        function degree2radian() {
+            {
+                calc "${@} * (${pi} / 180)"
+            }
+        }
+
+        declare pi=$(calc "4 * a(1)")
+
+        #* 加重係数
+        declare kl="1"
+        declare kc="1"
+        declare kh="1"
+
+        #* 基準色
+        declare L1=${@:1:1}
+        declare a1=${@:2:1}
+        declare b1=${@:3:1}
+
+        #* 比較色
+        declare L2=${@:4:1}
+        declare a2=${@:5:1}
+        declare b2=${@:6:1}
+
+        declare delta_Lp=$(calc "${L2/L*=/} - ${L1/L*=/}")
+
+        declare L_=$(calc "(${L1/L*=/} + ${L2/L*=/}) / 2")
+
+        declare c1=$(calc "sqrt((${a1/a*=/} ^ 2) + (${b1/b*=/} ^ 2))")
+        declare c2=$(calc "sqrt((${a2/a*=/} ^ 2) + (${b2/b*=/} ^ 2))")
+        declare c_=$(calc "(${c1} + ${c2}) / 2")
+
+        declare ap1=$(
+            calc \
+                "${a1/a*=/} + (${a1/a*=/} / 2) * \
+                (1 - sqrt( \
+                    (${c_} ^ 7) / \
+                    ((${c_} ^ 7) + (25 ^ 7)) \
+                ))"
+        )
+        declare ap2=$(
+            calc \
+                "${a2/a*=/} + (${a2/a*=/} / 2) * \
+                (1 - sqrt( \
+                    (${c_} ^ 7) / \
+                    ((${c_} ^ 7) + (25 ^ 7)) \
+                ))"
+        )
+
+        declare cp1=$(calc "sqrt((${ap1} ^ 2) + (${b1/b*=/} ^ 2))")
+        declare cp2=$(calc "sqrt((${ap2} ^ 2) + (${b2/b*=/} ^ 2))")
+        declare cp_=$(calc "(${cp1} + ${cp2}) / 2")
+        declare delta_cp=$(calc "${cp2} - ${cp1}")
+
+        if [[ $(calc "${b1/b*=/} == 0") == 1 ]] && [[ $(calc "${ap1} == 0") == 1 ]]; then
+            declare hp1="0"
+        else
+            declare hp1=$(
+                radian2degree $(
+                    atan2 ${b1/b*=/} ${ap1}
+                )
+            )
+            if [[ $(calc "${hp1} < 0") == 1 ]]; then
+                declare hp1=$(calc "${hp1} + 360")
+            fi
+        fi
+        if [[ $(calc "${b2/b*=/} == 0") == 1 ]] && [[ $(calc "${ap2} == 0") == 1 ]]; then
+            declare hp2="0"
+        else
+            declare hp2=$(
+                radian2degree $(
+                    atan2 ${b2/b*=/} ${ap2}
+                )
+            )
+            if [[ $(calc "${hp2} < 0") == 1 ]]; then
+                declare hp2=$(calc "${hp2} + 360")
+            fi
+        fi
+
+        declare abs=$(abs $(
+            calc "${hp1} - ${hp2}"
+        ))
+
+        if [[ $(calc "${c1} == 0") == 1 ]] || [[ $(calc "${c2} == 0") == 1 ]]; then
+            declare delta_hp1="0"
+        elif [[ $(calc "${abs} <= 180") == 1 ]]; then
+            declare delta_hp1=$(calc "${hp2} - ${hp1}")
+        elif [[ $(calc "${hp2} <= ${hp1}") == 1 ]]; then
+            declare delta_hp1=$(calc "${hp2} - ${hp1} + 360")
+        else
+            declare delta_hp1=$(calc "${hp2} - ${hp1} - 360")
+        fi
+
+        declare delta_hp=$(calc "2 * sqrt(${cp1} * ${cp2}) * s($(degree2radian ${delta_hp1}) / 2)")
+
+        if [[ $(calc "${abs} > 180") == 1 ]]; then
+            declare hp_=$(calc "(${hp1} + ${hp2} + 360) / 2")
+        else
+            declare hp_=$(calc "(${hp1} + ${hp2}) / 2")
+        fi
+
+        declare t_a=$(
+            degree2radian $(
+                calc "${hp_} - 30"
+            )
+        )
+        declare t_b=$(
+            degree2radian $(
+                calc "2 * ${hp_}"
+            )
+        )
+        declare t_c=$(
+            degree2radian $(
+                calc "3 * ${hp_} + 6"
+            )
+        )
+        declare t_d=$(
+            degree2radian $(
+                calc "4 * ${hp_} - 63"
+            )
+        )
+        declare t=$(
+            calc \
+                "1 - \
+                (0.17 * c(${t_a})) + \
+                (0.24 * c(${t_b})) + \
+                (0.32 * c(${t_c})) - \
+                (0.20 * c(${t_d}))"
+        )
+
+        declare sl=$(
+            calc \
+                "1 + ( \
+                    0.015 * (((${L_} - 50) ^ 2) / \
+                    sqrt(20 + (${L_} - 50) ^ 2)) \
+                )"
+        )
+        declare sc=$(calc "1 + 0.045 * ${cp_}")
+        declare sh=$(calc "1 + 0.015 * ${cp_} * ${t}")
+
+        declare exp_hp_=$(
+            exp $(
+                calc "-(((${hp_} - 275) / 25) ^ 2)"
+            )
+        )
+        declare radian_exp_hp_=$(
+            degree2radian $(
+                calc "60 * ${exp_hp_}"
+            )
+        )
+        declare rt=$(
+            calc \
+                "-2 * \
+                sqrt( \
+                    (${cp_} ^ 7) / \
+                    ((${cp_} ^ 7) + (25 ^ 7)) \
+                ) * \
+                s( \
+                    ${radian_exp_hp_} \
+                )"
+        )
+
+        calc \
+            "sqrt( \
+                ((${delta_Lp}/(${kl} * ${sl})) ^ 2) + \
+                ((${delta_cp}/(${kc} * ${sc})) ^ 2) + \
+                ((${delta_hp}/(${kh} * ${sh})) ^ 2) + \
+                ${rt} * (${delta_cp}/(${kc} * ${sc})) * (${delta_hp}/(${kh} * ${sh})) \
+            )" |
+            awk '{printf("%.4f\n",$1)}'
+    }
+}
