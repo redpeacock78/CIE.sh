@@ -18,7 +18,7 @@ jobs:
           sudo apt-get install bats
       - name: Run Test
         run: |
-          bats test/*.bats
+          bats --tap test
       - name: install CIE.sh
         run:
           sudo ./install.sh ${PREFIX:-/usr/local}
