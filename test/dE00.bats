@@ -59,13 +59,7 @@
     )
 
     for (( i=0; i < "${#lab_pairs[@]}"; i++ )); do
-        declare output="$(./bin/lab -dE00 ${lab_pairs[i]})"
-        declare result="$(bc -l <<<"${output} == ${dE2000[i]}")"
-        
-        echo "Lab pairs: ${lab_pairs[i]}"
-        echo "Output: ${output}"
-        echo "dE2000: ${dE2000[i]}"
-
-        [[ "${result}" == 1 ]]
+        run ./bin/lab -dE00 ${lab_pairs[i]}
+        [[ "${lines[0]}" == "${dE2000[i]}" ]]
     done
 }
