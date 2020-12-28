@@ -5,3 +5,33 @@ function calc() {
         BC_LINE_LENGTH=999 bc -l <<<"scale=100; ${@}" | sed 's/^\./0./;s/^-\./-0./'
     }
 }
+
+function abs() {
+    {
+        awk '{OFMT="%.100f"}{print abs($1)} function abs(x){return (x < 0)?-x:x}' <<<"${@}"
+    }
+}
+
+function exp() {
+    {
+        awk '{OFMT="%.100f"}{print exp($1)}' <<<"${@}"
+    }
+}
+
+function atan2() {
+    {
+        awk '{OFMT="%.100f"}{print atan2($1, $2)}' <<<"${@}"
+    }
+}
+
+function radian2degree() {
+    {
+        calc "${@} * (180 / ${pi})"
+    }
+}
+
+function degree2radian() {
+    {
+        calc "${@} * (${pi} / 180)"
+    }
+}
