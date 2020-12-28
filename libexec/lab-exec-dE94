@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
+source "${abs_path%/*}/libexec/lab-exec-calc"
+source "${abs_path%/*}/libexec/lab-error"
+
+function dE94() {
+    #Reference: https://ja.wikipedia.org/wiki/%E8%89%B2%E5%B7%AE#CIE94_(delta_E94)
+    {
+        declare k=${@:1:1}
+        shift
+
+        #* 重み付け係数
+        declare kc="1"
+        declare kh="1"
+        if [[ "${k}" == "-g" ]]; then
+            declare kl="1"
+            declare k1="0.045"
+            declare k2="0.015"
+        elif [[ "${k}" == "-t" ]]; then
+            declare kl="2"
+            declare k1="0.048"
+            declare k2="0.014"
+        elif [[ -z "${k}" ]] ||
+            [[ "${k}" != "-g" ]] ||
+            [[ "${k}" != "-t" ]]; then
+            error
+        fi
+
+        #* 基準色
+        declare L1=${@:1:1}
+        declare a1=${@:2:1}
+        declare b1=${@:3:1}
+
+        #* 比較色
+        declare L2=${@:4:1}
+        declare a2=${@:5:1}
+        declare b2=${@:6:1}
+
+        declare delta_L=$(calc "(${L1/L*=/} - ${L2/L*=/})")
+
+        declare c1=$(calc "sqrt((${a1/a*=/} ^ 2) + (${b1/b*=/} ^ 2))")
+        declare c2=$(calc "sqrt((${a2/a*=/} ^ 2) + (${b2/b*=/} ^ 2))")
+        declare delta_cab=$(calc "${c1} - ${c2}")
+
+        declare delta_a=$(calc "(${a1/a*=/} - ${a2/a*=/})")
+        declare delta_b=$(calc "(${b1/b*=/} - ${b2/b*=/})")
+
+        declare delta_hab=$(calc "sqrt((${delta_a} ^ 2) + (${delta_b} ^ 2) - (${delta_cab} ^ 2))")
+
+        declare sl="1"
+        declare sc=$(calc "(1 + (${k1} * ${c1}))")
+        declare sh=$(calc "(1 + (${k2} * ${c1}))")
+
+        declare a=$(calc "((${delta_L}/(${kl} * ${sl})) ^ 2)")
+        declare b=$(calc "((${delta_cab}/(${kc} * ${sc})) ^ 2)")
+        declare c=$(calc "((${delta_hab}/(${kh} * ${sh})) ^ 2)")
+
+        calc "sqrt(${a} + ${b} + ${c})" | awk '{printf("%.4f\n",$1)}'
+    }
+}
