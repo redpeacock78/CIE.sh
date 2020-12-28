@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
+source "${abs_path%/*}/libexec/lab-exec-calc"
+source "${abs_path%/*}/libexec/lab-error"
+
+function dE76() {
+    #Reference: https://ja.wikipedia.org/wiki/%E8%89%B2%E5%B7%AE#CIE76_(delta_E76)
+    {
+        [[ "${#@}" != 6 ]] && error
+
+        #* 基準色
+        declare La=${@:1:1}
+        declare aa=${@:2:1}
+        declare ba=${@:3:1}
+
+        #* 比較色
+        declare Lb=${@:4:1}
+        declare ab=${@:5:1}
+        declare bb=${@:6:1}
+
+        declare Lab=$(calc "(${Lb/L*=/} - ${La/L*=/}) ^ 2")
+        declare aab=$(calc "(${ab/a*=/} - ${aa/a*=/}) ^ 2")
+        declare bab=$(calc "(${bb/b*=/} - ${ba/b*=/}) ^ 2")
+
+        calc "sqrt(${Lab} + ${aab} + ${bab})" | awk '{printf("%.4f\n",$1)}'
+    }
+}
