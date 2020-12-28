@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+function error() {
+    {
+        cat <<ERR 1>&2
+${0##*/}: Sorry. An error has occurred :_(
+Refer '${0##*/} -h' or '${0##*/} --help' for how to use the command.
+ERR
+        exit 1
+    }
+}
