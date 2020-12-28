@@ -27,6 +27,8 @@ function dE94() {
             error
         fi
 
+        [[ "${#@}" != 6 ]] && error
+
         #* 基準色
         declare L1=${@:1:1}
         declare a1=${@:2:1}
