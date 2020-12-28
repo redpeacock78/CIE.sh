@@ -9,8 +9,6 @@ function dE00() {
     {
         [[ "${#@}" != 6 ]] && error
 
-        declare pi=$(calc "4 * a(1)")
-
         #* 加重係数
         declare kl="1"
         declare kc="1"
