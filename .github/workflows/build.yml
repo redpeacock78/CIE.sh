@@ -28,3 +28,9 @@ jobs:
       - name: Show help
         run: |
           lab --help
+      - name: Run
+        run: |
+          lab -dE76 50 50 0 40 50 0
+          lab -dE94 -g 50 50 0 40 50 0 
+          lab -dE04 -t 50 50 0 40 50 0
+          lab -dE00 50 50 0 40 50 0
