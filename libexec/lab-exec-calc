@@ -26,12 +26,14 @@ function atan2() {
 
 function radian2degree() {
     {
+        declare pi=$(calc "4 * a(1)")
         calc "${@} * (180 / ${pi})"
     }
 }
 
 function degree2radian() {
     {
+        declare pi=$(calc "4 * a(1)")
         calc "${@} * (${pi} / 180)"
     }
 }
