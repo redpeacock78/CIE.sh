@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+function calc() {
+    {
+        BC_LINE_LENGTH=999 bc -l <<<"scale=100; ${@}" | sed 's/^\./0./;s/^-\./-0./'
+    }
+}
