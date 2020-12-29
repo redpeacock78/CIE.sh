@@ -2,12 +2,12 @@
 
 declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
 source "${abs_path%/*}/libexec/lab-exec-calc"
-source "${abs_path%/*}/libexec/lab-error"
+source "${abs_path%/*}/libexec/lab-judge-args"
 
 function dE76() {
     #Reference: https://ja.wikipedia.org/wiki/%E8%89%B2%E5%B7%AE#CIE76_(delta_E76)
     {
-        [[ "${#@}" != 6 ]] && error
+        judge "${@}"
 
         #* 基準色
         declare La=${@:1:1}
