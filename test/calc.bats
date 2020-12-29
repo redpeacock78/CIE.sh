@@ -26,12 +26,6 @@ load test_helper
     [[ "${lines[0]%%2*}" == "3.14159" ]]
 }
 
-@test "test function atan2() from lab-exec-calc" {
-    run calc_func atan2 '0 -0'
-    [[ "${status}" == 0 ]]
-    [[ "${lines[0]%%2*}" == "3.14159" ]]
-}
-
 @test "test function radian2degree() from lab-exec-calc" {
     run calc_func radian2degree '1.57'
     [[ "${status}" == 0 ]]
