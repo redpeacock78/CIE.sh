@@ -16,12 +16,14 @@
 # @(#)  None
 # @(#)Depends:
 # @(#)  SHIFT
+# @(#)  XARGS
 # @(#)  BASH
 # @(#)  ECHO
 # @(#)  AWK
 # @(#)  SED
 # @(#)  CAT
 # @(#)  BC
+# @(#)  TR
 ########################################
 
 declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
