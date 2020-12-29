@@ -98,3 +98,27 @@ load test_helper
     [[ "${status}" == 1 ]]
     [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
 }
+
+@test "non-numeric arguments prints error from -dE76" {
+    run lab -dE76 _ 50 0 40 50 0
+    [[ "${status}" == 1 ]]
+    [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
+}
+
+@test "non-numeric arguments prints error from -dE94 -g" {
+    run lab -dE84 -g _ 50 0 40 50 0
+    [[ "${status}" == 1 ]]
+    [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
+}
+
+@test "non-numeric arguments prints error from -dE94 -t" {
+    run lab -dE84 -t _ 50 0 40 50 0
+    [[ "${status}" == 1 ]]
+    [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
+}
+
+@test "non-numeric arguments prints error from -dE00" {
+    run lab -dE00 _ 50 0 40 50 0
+    [[ "${status}" == 1 ]]
+    [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
+}
