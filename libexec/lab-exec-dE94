@@ -8,6 +8,8 @@ source "${abs_path%/*}/libexec/lab-error"
 function dE94() {
     #Reference: https://ja.wikipedia.org/wiki/%E8%89%B2%E5%B7%AE#CIE94_(delta_E94)
     {
+        judge "${@:2}"
+
         declare k=${@:1:1}
         shift
 
@@ -27,8 +29,6 @@ function dE94() {
             [[ "${k}" != "-t" ]]; then
             error
         fi
-
-        judge "${@}"
 
         #* 基準色
         declare L1=${@:1:1}
