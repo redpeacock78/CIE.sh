@@ -13,5 +13,6 @@ load test_helper
     for (( i=0; i < "${#lab_pairs[@]}"; i++ )); do
         run lab -dE76 ${lab_pairs[i]}
         [[ "${lines[0]}" == "${dE1976[i]}" ]]
+        coverage lab -dE76 ${lab_pairs[i]}
     done
 }
