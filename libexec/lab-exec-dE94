@@ -24,8 +24,7 @@ function dE94() {
             declare kl="2"
             declare k1="0.048"
             declare k2="0.014"
-        elif [[ -z "${k}" ]] ||
-            [[ "${k}" != "-g" ]] ||
+        elif [[ "${k}" != "-g" ]] ||
             [[ "${k}" != "-t" ]]; then
             error
         fi
