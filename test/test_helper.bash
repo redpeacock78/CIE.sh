@@ -22,7 +22,5 @@ function calc_func() {
 }
 
 function coverage() {
-    if type kcov 2>/dev/null; then
-        kcov -- coverage "${@}" || true
-    fi
+    /home/runner/kcov/bin/kcov -- coverage "${@}" || true
 }
