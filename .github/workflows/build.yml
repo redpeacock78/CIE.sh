@@ -43,5 +43,6 @@ jobs:
           lab -dE94 -t 50 50 0 40 50 0
           lab -dE00 50 50 0 40 50 0
       - name: upload coverage
-        run: |
-          bash <(curl -s https://codecov.io/bash) -s $(pwd)/coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
