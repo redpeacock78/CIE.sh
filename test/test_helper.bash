@@ -20,3 +20,9 @@ function calc_func() {
         shift && degree2radian "${@}"
     fi
 }
+
+function coverage() {
+    if type kcov 2>/dev/null; then
+        kcov -- coverage "${@}" || true
+    fi
+}
