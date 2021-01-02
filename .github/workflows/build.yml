@@ -26,10 +26,8 @@ jobs:
           make install
       - name: Run Test
         run: |
-          now_dir=$(pwd)
-          sudo useradd -d /home/kcov kcov
-          sudo su - kcov
-          bats --tap $(pwd)/test
+          kcov -- outdir lab -h
+          bats --tap test
       - name: install CIE.sh
         run:
           sudo ./install.sh ${PREFIX:-/usr/local}
