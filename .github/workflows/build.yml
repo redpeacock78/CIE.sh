@@ -8,8 +8,6 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
-    container:
-      options: --user 1001
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -28,7 +26,10 @@ jobs:
           make install
       - name: Run Test
         run: |
-          bats --tap test
+          now_dir=$(pwd)
+          useradd -d /home/kcov kcov
+          su - kcov
+          bats --tap $(pwd)/test
       - name: install CIE.sh
         run:
           sudo ./install.sh ${PREFIX:-/usr/local}
