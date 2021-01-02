@@ -158,8 +158,8 @@ load test_helper
 }
 
 @test "specifying wrong options prints error from -dE94" {
-    run lab -dE94 -t 40 50 0 40 50 10
+    run lab -dE94 -k 40 50 0 40 50 10
     [[ "${status}" == 1 ]]
     [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
-    coverage lab -dE94 -t 40 50 0 40 50 10
+    coverage lab -dE94 -k 40 50 0 40 50 10
 }
