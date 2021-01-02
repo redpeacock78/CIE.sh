@@ -1,5 +1,5 @@
 function setup() {
-    export PATH="${BATS_TEST_DIRNAME/test/bin}:/home/runner/kcov/bin/:${PATH}"
+    export PATH="${BATS_TEST_DIRNAME/test/bin}:${HOME}/kcov/bin:${PATH}"
     export DATA="${BATS_TEST_DIRNAME}/data"
     export err_msg='lab: Sorry. An error has occurred :_('
 }
