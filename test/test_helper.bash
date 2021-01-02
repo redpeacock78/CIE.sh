@@ -1,5 +1,5 @@
 function setup() {
-    export PATH="${BATS_TEST_DIRNAME/test/bin}:${PATH}"
+    export PATH="${BATS_TEST_DIRNAME/test/bin}:/home/runner/kcov/bin/:${PATH}"
     export DATA="${BATS_TEST_DIRNAME}/data"
     export err_msg='lab: Sorry. An error has occurred :_('
 }
@@ -22,5 +22,5 @@ function calc_func() {
 }
 
 function coverage() {
-    /home/runner/kcov/bin/kcov -- coverage "${@}" || true
+    kcov -- coverage "${@}" || true
 }
