@@ -112,40 +112,47 @@ load test_helper
     run lab -dE94 -t 50 50 0 40 50 0 78
     [[ "${status}" == 1 ]]
     [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
-    coverage lab -dE94 -t 50 50 0 40 50 78
+    coverage lab -dE94 -t 50 50 0 40 50 0 78
 }
 
 @test "many arguments prints error from -dE00" {
     run lab -dE00 50 50 0 40 50 0 78
     [[ "${status}" == 1 ]]
     [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
-    coverage lab -dE00 50 50 0 40 50 78
+    coverage lab -dE00 50 50 0 40 50 0 78
 }
 
 @test "non-numeric arguments prints error from -dE76" {
     run lab -dE76 _ 50 0 40 50 0
     [[ "${status}" == 1 ]]
     [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
-    coverage lab -dE76 _ 50 0 40 50
+    coverage lab -dE76 _ 50 0 40 50 0
 }
 
 @test "non-numeric arguments prints error from -dE94 -g" {
     run lab -dE94 -g _ 50 0 40 50 0
     [[ "${status}" == 1 ]]
     [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
-    coverage lab -dE94 -g _ 50 0 40 50
+    coverage lab -dE94 -g _ 50 0 40 50 0
 }
 
 @test "non-numeric arguments prints error from -dE94 -t" {
     run lab -dE94 -t _ 50 0 40 50 0
     [[ "${status}" == 1 ]]
     [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
-    coverage lab -dE94 -t _ 50 0 40 50
+    coverage lab -dE94 -t _ 50 0 40 50 0
 }
 
 @test "non-numeric arguments prints error from -dE00" {
     run lab -dE00 _ 50 0 40 50 0
     [[ "${status}" == 1 ]]
     [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
-    coverage lab -dE00 _ 50 0 40 50
+    coverage lab -dE00 _ 50 0 40 50 0
+}
+
+@test "-g or -t not specified prints error from -dE94" {
+    run lab -dE94 40 50 0 40 50 10
+    [[ "${status}" == 1 ]]
+    [[ $(head -n1 <<<"${lines[0]}") == "${err_msg}" ]]
+    coverage lab -dE94 40 50 0 40 50 10
 }
