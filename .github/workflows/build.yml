@@ -26,7 +26,6 @@ jobs:
           make install
       - name: Run Test
         run: |
-          /home/runner/kcov/bin/kcov -- outdir lab -h
           bats --tap test
       - name: install CIE.sh
         run:
