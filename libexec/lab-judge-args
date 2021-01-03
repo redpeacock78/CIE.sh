@@ -1,28 +1,32 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2145,SC2124
+# shellcheck source=/dev/null
 
-declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
-source "${abs_path%/*}/libexec/lab-error"
+abs_path="$(builtin cd "$(dirname "${0}")" && builtin pwd)"
+declare abs_path
+source "${abs_path%/bin}/libexec/lab-error"
 
 function judge() {
     {
         [[ "${#@}" != 6 ]] && error
 
         {
-            declare test_a=${@:1:1}
-            declare test_b=${@:2:1}
-            declare test_c=${@:3:1}
-            declare test_d=${@:4:1}
-            declare test_e=${@:5:1}
-            declare test_f=${@:6:1}
+            readonly test_a=${@:1:1}
+            readonly test_b=${@:2:1}
+            readonly test_c=${@:3:1}
+            readonly test_d=${@:4:1}
+            readonly test_e=${@:5:1}
+            readonly test_f=${@:6:1}
 
-            declare test_all=(
-                ${test_a/L*=/}
-                ${test_b/a*=/}
-                ${test_c/b*=/}
-                ${test_d/L*=/}
-                ${test_e/a*=/}
-                ${test_f/b*=/}
+            test_all=(
+                "${test_a/L*=/}"
+                "${test_b/a*=/}"
+                "${test_c/b*=/}"
+                "${test_d/L*=/}"
+                "${test_e/a*=/}"
+                "${test_f/b*=/}"
             )
+            readonly test_all
 
             for ((i = 0; i < "${#test_all[@]}"; i++)); do
                 grep -q "^-\?[0-9]\+\.\?[0-9]*$" <<<"${test_all[i]}" || error
