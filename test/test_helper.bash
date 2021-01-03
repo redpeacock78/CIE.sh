@@ -1,3 +1,5 @@
+# shellcheck source=/dev/null
+
 function setup() {
     export PATH="${BATS_TEST_DIRNAME/test/bin}:${HOME}/kcov/bin:${PATH}"
     export DATA="${BATS_TEST_DIRNAME}/data"
