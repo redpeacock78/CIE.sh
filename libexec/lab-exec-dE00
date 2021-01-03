@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2145,SC2124
+# shellcheck source=/dev/null
 
-declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
+abs_path="$(builtin cd "$(dirname "${0}")" && builtin pwd)"
+declare abs_path
 source "${abs_path%/*}/libexec/lab-exec-calc"
 source "${abs_path%/*}/libexec/lab-judge-args"
 
@@ -10,29 +13,34 @@ function dE00() {
         judge "${@}"
 
         #* 加重係数
-        declare kl="1"
-        declare kc="1"
-        declare kh="1"
+        readonly kl="1"
+        readonly kc="1"
+        readonly kh="1"
 
         #* 基準色
-        declare L1=${@:1:1}
-        declare a1=${@:2:1}
-        declare b1=${@:3:1}
+        readonly L1=${@:1:1}
+        readonly a1=${@:2:1}
+        readonly b1=${@:3:1}
 
         #* 比較色
-        declare L2=${@:4:1}
-        declare a2=${@:5:1}
-        declare b2=${@:6:1}
+        readonly L2=${@:4:1}
+        readonly a2=${@:5:1}
+        readonly b2=${@:6:1}
 
-        declare delta_Lp=$(calc "${L2/L*=/} - ${L1/L*=/}")
+        delta_Lp=$(calc "${L2/L*=/} - ${L1/L*=/}")
+        readonly delta_Lp
 
-        declare L_=$(calc "(${L1/L*=/} + ${L2/L*=/}) / 2")
+        L_=$(calc "(${L1/L*=/} + ${L2/L*=/}) / 2")
+        readonly L_
 
-        declare c1=$(calc "sqrt((${a1/a*=/} ^ 2) + (${b1/b*=/} ^ 2))")
-        declare c2=$(calc "sqrt((${a2/a*=/} ^ 2) + (${b2/b*=/} ^ 2))")
-        declare c_=$(calc "(${c1} + ${c2}) / 2")
+        c1=$(calc "sqrt((${a1/a*=/} ^ 2) + (${b1/b*=/} ^ 2))")
+        readonly c1
+        c2=$(calc "sqrt((${a2/a*=/} ^ 2) + (${b2/b*=/} ^ 2))")
+        readonly c2
+        c_=$(calc "(${c1} + ${c2}) / 2")
+        readonly c_
 
-        declare ap1=$(
+        ap1=$(
             calc \
                 "${a1/a*=/} + (${a1/a*=/} / 2) * \
                 (1 - sqrt( \
@@ -40,7 +48,8 @@ function dE00() {
                     ((${c_} ^ 7) + (25 ^ 7)) \
                 ))"
         )
-        declare ap2=$(
+        readonly ap1
+        ap2=$(
             calc \
                 "${a2/a*=/} + (${a2/a*=/} / 2) * \
                 (1 - sqrt( \
@@ -48,80 +57,98 @@ function dE00() {
                     ((${c_} ^ 7) + (25 ^ 7)) \
                 ))"
         )
+        readonly ap2
 
-        declare cp1=$(calc "sqrt((${ap1} ^ 2) + (${b1/b*=/} ^ 2))")
-        declare cp2=$(calc "sqrt((${ap2} ^ 2) + (${b2/b*=/} ^ 2))")
-        declare cp_=$(calc "(${cp1} + ${cp2}) / 2")
-        declare delta_cp=$(calc "${cp2} - ${cp1}")
+        cp1=$(calc "sqrt((${ap1} ^ 2) + (${b1/b*=/} ^ 2))")
+        readonly cp1
+        cp2=$(calc "sqrt((${ap2} ^ 2) + (${b2/b*=/} ^ 2))")
+        readonly cp2
+        cp_=$(calc "(${cp1} + ${cp2}) / 2")
+        readonly cp_
+        delta_cp=$(calc "${cp2} - ${cp1}")
+        readonly delta_cp
 
         if [[ $(calc "${b1/b*=/} == 0") == 1 ]] && [[ $(calc "${ap1} == 0") == 1 ]]; then
-            declare hp1="0"
+            readonly hp1="0"
         else
-            declare hp1=$(
-                radian2degree $(
-                    atan2 ${b1/b*=/} ${ap1}
-                )
-            )
+            hp1_atan2=$(atan2 "${b1/b*=/} ${ap1}")
+            readonly hp1_atan2
+            declare hp1
+            hp1=$(radian2degree "${hp1_atan2}")
             if [[ $(calc "${hp1} < 0") == 1 ]]; then
-                declare hp1=$(calc "${hp1} + 360")
+                hp1=$(calc "${hp1} + 360")
+                readonly hp1
             fi
         fi
         if [[ $(calc "${b2/b*=/} == 0") == 1 ]] && [[ $(calc "${ap2} == 0") == 1 ]]; then
-            declare hp2="0"
+            readonly hp2="0"
         else
-            declare hp2=$(
-                radian2degree $(
-                    atan2 ${b2/b*=/} ${ap2}
-                )
-            )
+            hp2_atan2=$(atan2 "${b2/b*=/} ${ap2}")
+            readonly hp2_atan2
+            declare hp2
+            hp2=$(radian2degree "${hp2_atan2}")
             if [[ $(calc "${hp2} < 0") == 1 ]]; then
-                declare hp2=$(calc "${hp2} + 360")
+                hp2=$(calc "${hp2} + 360")
+                readonly hp2
             fi
         fi
 
-        declare abs=$(abs $(
-            calc "${hp1} - ${hp2}"
-        ))
+        abs=$(
+            abs "$(
+                calc "${hp1} - ${hp2}"
+            )"
+        )
+        readonly abs
 
         if [[ $(calc "${c1} == 0") == 1 ]] || [[ $(calc "${c2} == 0") == 1 ]]; then
-            declare delta_hp1="0"
+            readonly delta_hp1="0"
         elif [[ $(calc "${abs} <= 180") == 1 ]]; then
-            declare delta_hp1=$(calc "${hp2} - ${hp1}")
+            delta_hp1=$(calc "${hp2} - ${hp1}")
+            readonly delta_hp1
         elif [[ $(calc "${hp2} <= ${hp1}") == 1 ]]; then
-            declare delta_hp1=$(calc "${hp2} - ${hp1} + 360")
+            delta_hp1=$(calc "${hp2} - ${hp1} + 360")
+            readonly delta_hp1
         else
-            declare delta_hp1=$(calc "${hp2} - ${hp1} - 360")
+            delta_hp1=$(calc "${hp2} - ${hp1} - 360")
+            readonly delta_hp1
         fi
 
-        declare delta_hp=$(calc "2 * sqrt(${cp1} * ${cp2}) * s($(degree2radian ${delta_hp1}) / 2)")
+        delta_hp=$(calc "2 * sqrt(${cp1} * ${cp2}) * s($(degree2radian "${delta_hp1}") / 2)")
+        readonly delta_hp
 
         if [[ $(calc "${abs} > 180") == 1 ]]; then
-            declare hp_=$(calc "(${hp1} + ${hp2} + 360) / 2")
+            hp_=$(calc "(${hp1} + ${hp2} + 360) / 2")
+            readonly hp_
         else
-            declare hp_=$(calc "(${hp1} + ${hp2}) / 2")
+            hp_=$(calc "(${hp1} + ${hp2}) / 2")
+            readonly hp_
         fi
 
-        declare t_a=$(
-            degree2radian $(
+        t_a=$(
+            degree2radian "$(
                 calc "${hp_} - 30"
-            )
+            )"
         )
-        declare t_b=$(
-            degree2radian $(
+        readonly t_a
+        t_b=$(
+            degree2radian "$(
                 calc "2 * ${hp_}"
-            )
+            )"
         )
-        declare t_c=$(
-            degree2radian $(
+        readonly t_b
+        t_c=$(
+            degree2radian "$(
                 calc "3 * ${hp_} + 6"
-            )
+            )"
         )
-        declare t_d=$(
-            degree2radian $(
+        readonly t_c
+        t_d=$(
+            degree2radian "$(
                 calc "4 * ${hp_} - 63"
-            )
+            )"
         )
-        declare t=$(
+        readonly t_d
+        t=$(
             calc \
                 "1 - \
                 (0.17 * c(${t_a})) + \
@@ -129,28 +156,34 @@ function dE00() {
                 (0.32 * c(${t_c})) - \
                 (0.20 * c(${t_d}))"
         )
+        readonly t
 
-        declare sl=$(
+        sl=$(
             calc \
                 "1 + ( \
                     0.015 * (((${L_} - 50) ^ 2) / \
                     sqrt(20 + (${L_} - 50) ^ 2)) \
                 )"
         )
-        declare sc=$(calc "1 + 0.045 * ${cp_}")
-        declare sh=$(calc "1 + 0.015 * ${cp_} * ${t}")
+        readonly sl
+        sc=$(calc "1 + 0.045 * ${cp_}")
+        readonly sc
+        sh=$(calc "1 + 0.015 * ${cp_} * ${t}")
+        readonly sh
 
-        declare exp_hp_=$(
-            exp $(
+        exp_hp_=$(
+            exp "$(
                 calc "-(((${hp_} - 275) / 25) ^ 2)"
-            )
+            )"
         )
-        declare radian_exp_hp_=$(
-            degree2radian $(
+        readonly exp_hp_
+        radian_exp_hp_=$(
+            degree2radian "$(
                 calc "60 * ${exp_hp_}"
-            )
+            )"
         )
-        declare rt=$(
+        readonly radian_exp_hp_
+        rt=$(
             calc \
                 "-2 * \
                 sqrt( \
@@ -161,6 +194,7 @@ function dE00() {
                     ${radian_exp_hp_} \
                 )"
         )
+        readonly rt
 
         calc \
             "sqrt( \
