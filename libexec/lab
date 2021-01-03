@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2145,SC2124,SC2199,SC2068
+# shellcheck source=/dev/null
 #
 # @(#)lab 0.0.1
 # @(#)(c) 2020 redpeacock78
@@ -25,7 +27,8 @@
 # @(#)  BC
 ########################################
 
-declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
+abs_path="$(builtin cd "$(dirname "${0}")" && builtin pwd)"
+declare abs_path
 source "${abs_path%/*}/libexec/lab-exec-dE76"
 source "${abs_path%/*}/libexec/lab-exec-dE94"
 source "${abs_path%/*}/libexec/lab-exec-dE00"
@@ -87,12 +90,12 @@ elif [[ ${@:1:1} == "-h" ]] ||
     [[ ${@:1:1} == "--help" ]]; then
     usage
 elif [[ -z ${@} ]] ||
-    [[ ${@:1:1} != "-h" ]] ||
-    [[ ${@:1:1} != "--help" ]] ||
-    [[ ${@:1:1} != "-v" ]] ||
-    [[ ${@:1:1} != "--version" ]] ||
-    [[ ${@:1:1} != "-dE76" ]] ||
-    [[ ${@:1:1} != "-dE94" ]] ||
+    [[ ${@:1:1} != "-h" ]] &&
+    [[ ${@:1:1} != "--help" ]] &&
+    [[ ${@:1:1} != "-v" ]] &&
+    [[ ${@:1:1} != "--version" ]] &&
+    [[ ${@:1:1} != "-dE76" ]] &&
+    [[ ${@:1:1} != "-dE94" ]] &&
     [[ ${@:1:1} != "-dE00" ]]; then
     error
 fi
