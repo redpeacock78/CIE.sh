@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2145,SC2124
+# shellcheck source=/dev/null
 
-declare abs_path="$(builtin cd "$(dirname ${0})" && builtin pwd)"
+abs_path="$(builtin cd "$(dirname "${0}")" && builtin pwd)"
+declare abs_path
 source "${abs_path%/*}/libexec/lab-exec-calc"
 source "${abs_path%/*}/libexec/lab-judge-args"
 source "${abs_path%/*}/libexec/lab-error"
@@ -10,53 +13,64 @@ function dE94() {
     {
         judge "${@:2}"
 
-        declare k=${@:1:1}
+        readonly k=${@:1:1}
         shift
 
         #* 重み付け係数
-        declare kc="1"
-        declare kh="1"
+        readonly kc="1"
+        readonly kh="1"
         if [[ "${k}" == "-g" ]]; then
-            declare kl="1"
-            declare k1="0.045"
-            declare k2="0.015"
+            readonly kl="1"
+            readonly k1="0.045"
+            readonly k2="0.015"
         elif [[ "${k}" == "-t" ]]; then
-            declare kl="2"
-            declare k1="0.048"
-            declare k2="0.014"
-        elif [[ "${k}" != "-g" ]] ||
-            [[ "${k}" != "-t" ]]; then
+            readonly kl="2"
+            readonly k1="0.048"
+            readonly k2="0.014"
+        elif [[ "${k}" != "-g" ]] && [[ "${k}" != "-t" ]]; then
             error
         fi
 
         #* 基準色
-        declare L1=${@:1:1}
-        declare a1=${@:2:1}
-        declare b1=${@:3:1}
+        readonly L1=${@:1:1}
+        readonly a1=${@:2:1}
+        readonly b1=${@:3:1}
 
         #* 比較色
-        declare L2=${@:4:1}
-        declare a2=${@:5:1}
-        declare b2=${@:6:1}
+        readonly L2=${@:4:1}
+        readonly a2=${@:5:1}
+        readonly b2=${@:6:1}
 
-        declare delta_L=$(calc "(${L1/L*=/} - ${L2/L*=/})")
+        delta_L=$(calc "(${L1/L*=/} - ${L2/L*=/})")
+        readonly delta_L
 
-        declare c1=$(calc "sqrt((${a1/a*=/} ^ 2) + (${b1/b*=/} ^ 2))")
-        declare c2=$(calc "sqrt((${a2/a*=/} ^ 2) + (${b2/b*=/} ^ 2))")
-        declare delta_cab=$(calc "${c1} - ${c2}")
+        c1=$(calc "sqrt((${a1/a*=/} ^ 2) + (${b1/b*=/} ^ 2))")
+        readonly c1
+        c2=$(calc "sqrt((${a2/a*=/} ^ 2) + (${b2/b*=/} ^ 2))")
+        readonly c2
+        delta_cab=$(calc "${c1} - ${c2}")
+        readonly delta_cab
 
-        declare delta_a=$(calc "(${a1/a*=/} - ${a2/a*=/})")
-        declare delta_b=$(calc "(${b1/b*=/} - ${b2/b*=/})")
+        delta_a=$(calc "(${a1/a*=/} - ${a2/a*=/})")
+        readonly delta_a
+        delta_b=$(calc "(${b1/b*=/} - ${b2/b*=/})")
+        readonly delta_b
 
-        declare delta_hab=$(calc "sqrt((${delta_a} ^ 2) + (${delta_b} ^ 2) - (${delta_cab} ^ 2))")
+        delta_hab=$(calc "sqrt((${delta_a} ^ 2) + (${delta_b} ^ 2) - (${delta_cab} ^ 2))")
+        readonly delta_hab
 
-        declare sl="1"
-        declare sc=$(calc "(1 + (${k1} * ${c1}))")
-        declare sh=$(calc "(1 + (${k2} * ${c1}))")
+        readonly sl="1"
+        sc=$(calc "(1 + (${k1} * ${c1}))")
+        readonly sc
+        sh=$(calc "(1 + (${k2} * ${c1}))")
+        readonly sh
 
-        declare a=$(calc "((${delta_L}/(${kl} * ${sl})) ^ 2)")
-        declare b=$(calc "((${delta_cab}/(${kc} * ${sc})) ^ 2)")
-        declare c=$(calc "((${delta_hab}/(${kh} * ${sh})) ^ 2)")
+        a=$(calc "((${delta_L}/(${kl} * ${sl})) ^ 2)")
+        readonly a
+        b=$(calc "((${delta_cab}/(${kc} * ${sc})) ^ 2)")
+        readonly b
+        c=$(calc "((${delta_hab}/(${kh} * ${sh})) ^ 2)")
+        readonly c
 
         calc "sqrt(${a} + ${b} + ${c})" | awk '{printf("%.4f\n",$1)}'
     }
