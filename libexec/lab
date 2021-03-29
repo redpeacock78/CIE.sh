@@ -39,7 +39,7 @@ source "${abs_path%/*}/libexec/lab-error"
 function version() {
     {
         cat <<EOS
-${0##*/} 0.0.1
+${0##*/} 0.0.2
 Copyright (C) 2020 redpeacock78
 License MIT.
 THIS IS FREE SOFTWARE.
