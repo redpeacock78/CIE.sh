@@ -4,7 +4,7 @@
 
 abs_path="$(builtin cd "$(dirname "${0}")" && builtin pwd)"
 declare abs_path
-source "${abs_path%/bin}/libexec/lab-error"
+source "${abs_path%/*}/libexec/lab-error"
 
 function judge() {
     {
