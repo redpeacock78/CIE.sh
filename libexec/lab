@@ -2,7 +2,7 @@
 # shellcheck disable=SC2145,SC2124,SC2199,SC2068
 # shellcheck source=/dev/null
 #
-# @(#)lab 0.0.1
+# @(#)lab 0.0.3
 # @(#)(c) 2020 redpeacock78
 # @(#)MIT License is applied to this script.
 # @(#)
@@ -29,6 +29,7 @@
 
 abs_path="$(builtin cd "$(dirname "${0}")" && builtin pwd)"
 declare abs_path
+source "${abs_path%/*}/libexec/lab-depend-check"
 source "${abs_path%/*}/libexec/lab-exec-dE76"
 source "${abs_path%/*}/libexec/lab-exec-dE94"
 source "${abs_path%/*}/libexec/lab-exec-dE00"
@@ -39,7 +40,7 @@ source "${abs_path%/*}/libexec/lab-error"
 function version() {
     {
         cat <<EOS
-${0##*/} 0.0.2
+${0##*/} 0.0.3
 Copyright (C) 2020 redpeacock78
 License MIT.
 THIS IS FREE SOFTWARE.
@@ -78,11 +79,20 @@ EOS
 
 ####MAIN_PROCESSING####
 if [[ ${@:1:1} == "-dE76" ]]; then
-    shift && dE76 ${@}
+    check &&
+        {
+            shift && dE76 ${@}
+        }
 elif [[ ${@:1:1} == "-dE94" ]]; then
-    shift && dE94 ${@}
+    check &&
+        {
+            shift && dE94 ${@}
+        }
 elif [[ ${@:1:1} == "-dE00" ]]; then
-    shift && dE00 ${@}
+    check &&
+        {
+            shift && dE00 ${@}
+        }
 elif [[ ${@:1:1} == "-v" ]] ||
     [[ ${@:1:1} == "--version" ]]; then
     version
