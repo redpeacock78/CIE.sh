@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+function check() {
+    {
+        function check_bash() {
+            if type bash >/dev/null 2>&1; then
+                :
+            else
+                echo '"bash" not found'
+            fi
+        }
+        function check_grep() {
+            if type grep >/dev/null 2>&1; then
+                :
+            else
+                echo '"grep" not found'
+            fi
+        }
+        function check_echo() {
+            if type echo >/dev/null 2>&1; then
+                :
+            else
+                echo '"echo" not found'
+            fi
+        }
+        function check_awk() {
+            if type awk >/dev/null 2>&1; then
+                :
+            else
+                echo '"awk" not found'
+            fi
+        }
+        function check_sed() {
+            if type sed >/dev/null 2>&1; then
+                :
+            else
+                echo '"sed" not found'
+            fi
+        }
+        function check_cat() {
+            if type cat >/dev/null 2>&1; then
+                :
+            else
+                echo '"cat" not found'
+            fi
+        }
+        function check_bc() {
+            if type bc >/dev/null 2>&1; then
+                :
+            else
+                echo '"bc" not found'
+            fi
+        }
+        result="$(check_bash && check_grep && check_echo && check_awk && check_sed && check_cat && check_bc)"
+        readonly result
+        if [[ -z "${result}" ]]; then
+            :
+        else
+            echo "${result}" 1>&2 && exit 1
+        fi
+    }
+}
