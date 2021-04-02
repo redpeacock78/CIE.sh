@@ -45,7 +45,7 @@ function check() {
             fi
         }
         result="$(check_bash && check_grep && check_awk && check_sed && check_cat && check_bc)"
-        declare result
+        readonly result
         if [[ -z "${result}" ]]; then
             :
         else
