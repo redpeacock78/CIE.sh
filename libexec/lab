@@ -2,8 +2,8 @@
 # shellcheck disable=SC2145,SC2124,SC2199,SC2068
 # shellcheck source=/dev/null
 #
-# @(#)lab 0.0.3
-# @(#)(c) 2020 redpeacock78
+# @(#)lab 0.0.4
+# @(#)(c) 2020-2021 redpeacock78
 # @(#)MIT License is applied to this script.
 # @(#)
 ########################################
@@ -40,7 +40,7 @@ source "${abs_path%/*}/libexec/lab-error"
 function version() {
     {
         cat <<EOS
-${0##*/} 0.0.3
+${0##*/} 0.0.4
 Copyright (C) 2020 redpeacock78
 License MIT.
 THIS IS FREE SOFTWARE.
