@@ -6,53 +6,46 @@ function check() {
             if type bash >/dev/null 2>&1; then
                 :
             else
-                echo '"bash" not found'
+                echo "bash: command not found."
             fi
         }
         function check_grep() {
             if type grep >/dev/null 2>&1; then
                 :
             else
-                echo '"grep" not found'
-            fi
-        }
-        function check_echo() {
-            if type echo >/dev/null 2>&1; then
-                :
-            else
-                echo '"echo" not found'
+                echo "grep: command not found."
             fi
         }
         function check_awk() {
             if type awk >/dev/null 2>&1; then
                 :
             else
-                echo '"awk" not found'
+                echo "awk: command not found."
             fi
         }
         function check_sed() {
             if type sed >/dev/null 2>&1; then
                 :
             else
-                echo '"sed" not found'
+                echo "sed: command not found."
             fi
         }
         function check_cat() {
             if type cat >/dev/null 2>&1; then
                 :
             else
-                echo '"cat" not found'
+                echo "cat: command not found."
             fi
         }
         function check_bc() {
             if type bc >/dev/null 2>&1; then
                 :
             else
-                echo '"bc" not found'
+                echo "bc: command not found."
             fi
         }
-        result="$(check_bash && check_grep && check_echo && check_awk && check_sed && check_cat && check_bc)"
-        readonly result
+        result="$(check_bash && check_grep && check_awk && check_sed && check_cat && check_bc)"
+        declare result
         if [[ -z "${result}" ]]; then
             :
         else
